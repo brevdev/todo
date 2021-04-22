@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { GetTodos } from './agent';
+import { GetTodos, AddTodo } from './agent';
 
 function App() {
 
@@ -10,6 +10,11 @@ function App() {
   const init = async () => {
     let response = await GetTodos();
     console.log(response);
+  }
+
+  const createTodo = async () => {
+    let response = await AddTodo(newTodo);
+    init();
   }
 
   useEffect(()=>{
@@ -27,9 +32,7 @@ function App() {
           }}
         />
         
-        <button onClick={()=>{
-          alert("you clicked me!")
-        }}>add todo</button>
+        <button onClick={createTodo}>add todo</button>
 
 
 

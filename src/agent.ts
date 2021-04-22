@@ -18,3 +18,20 @@ export const GetTodos = async () => {
     let response = await FetchTodos();
     return await response.json() as MultipleToDos;
 }
+
+
+const CreateTodo = async (newTitle: string) => {
+    let response = await fetch(BREV_URL, {
+        method: "POST",
+        body: JSON.stringify({
+            title: newTitle,
+            isComplete: false
+        })
+    });
+    return response;
+}
+
+export const AddTodo = async (newTitle: string) => {
+    let response = await CreateTodo(newTitle);
+    return await response.json();
+}
