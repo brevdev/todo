@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { GetTodos } from './agent';
 
 function App() {
+
+
+  const init = async () => {
+    let response = await GetTodos();
+    console.log(response);
+  }
+
+  useEffect(()=>{
+    init()
+  },[])
+
   return (
     <div className="App">
       <header className="App-header">
