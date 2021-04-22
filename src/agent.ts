@@ -1,6 +1,6 @@
 export const BREV_URL = "https://hyfc3f7n.brev.dev/api/Todo"
 
-interface TodoType {
+export interface TodoType {
     id: string;
     title: string;
     isComplete: boolean;
