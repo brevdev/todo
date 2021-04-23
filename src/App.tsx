@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { GetTodos, AddTodo, TodoType } from "./agent";
+import { GetTodos, AddTodo, ModifyTodo, TodoType } from "./agent";
 import { isPropertySignature } from "typescript";
 
 function App() {
@@ -19,6 +19,11 @@ function App() {
     refreshTodoList();
   };
 
+  const modifyTodo = async (id: string) => {
+    let response = await ModifyTodo(id);
+    refreshTodoList();
+  }
+
   useEffect(() => {
     refreshTodoList();
   }, []);
@@ -26,12 +31,12 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div>
+        <div className={"todo-container"}>
           {todoList.map((t) => {
-            return !t.isComplete ? <Checkbox title={t.title} onChange={()=>{}} isChecked={t.isComplete} /> : "" ;
+            return !t.isComplete ? <Checkbox todo={t} onChange={()=>{modifyTodo(t.id)}}/> : "" ;
           })}
           {todoList.map((t) => {
-            return t.isComplete ? <Checkbox title={t.title} onChange={()=>{}} isChecked={t.isComplete} /> : "" ;
+            return t.isComplete ? <Checkbox todo={t} onChange={()=>{modifyTodo(t.id)}}/> : "" ;
           })}
         </div>
 
@@ -52,21 +57,27 @@ export default App;
 
 
 interface CheckboxProps {
-  title: string;
-  isChecked: boolean;
-  onChange: ()=>void;
+  todo: TodoType;
+  onChange: (id: string)=>void;
 }
 
 const Checkbox = (props: CheckboxProps) => {
+  const [isChecked, setIsChecked] = useState(props.todo.isComplete);
+
+
+
   return (
     <label>
       <input 
       type={"checkbox"}
-      onChange={props.onChange}
-        value={props.title}
-        checked={props.isChecked}
+      onChange={()=>{
+        setIsChecked(!isChecked);
+        props.onChange(props.todo.id);
+      }}
+        value={props.todo.title}
+        checked={isChecked}
       />
-      {props.title}
+      {props.todo.title}
     </label>
   )
 }
