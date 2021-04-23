@@ -46,6 +46,17 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div className={"todo-container"}>
+
+          {/* 2️⃣ - this one first please :)
+
+          {[1,2,3,4,5,6,7].map(element => {
+            return(
+              <div>{element}</div>
+            )
+          })}
+
+           */}
+
           {/* 2️⃣
           
           {todoList.map((t) => {
