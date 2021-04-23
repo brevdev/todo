@@ -13,6 +13,8 @@ function App() {
   const [newTodo, setNewTodo] = useState("");
   /* 2️⃣
   const [todoList, setTodoList] = useState<TodoType[]>([]);
+  //                              useState<>(());
+  //                                      <TodoType[]>
   /*
 
   /* 2️⃣
