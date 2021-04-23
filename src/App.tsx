@@ -3,6 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { GetTodos, AddTodo, ModifyTodo, TodoType } from "./agent";
 import { isPropertySignature } from "typescript";
+import { BuiltWithBrev } from "built-with-brev";
 
 function App() {
   const [newTodo, setNewTodo] = useState("");
@@ -22,7 +23,7 @@ function App() {
   const modifyTodo = async (id: string) => {
     let response = await ModifyTodo(id);
     refreshTodoList();
-  }
+  };
 
   useEffect(() => {
     refreshTodoList();
@@ -33,10 +34,28 @@ function App() {
       <header className="App-header">
         <div className={"todo-container"}>
           {todoList.map((t) => {
-            return !t.isComplete ? <Checkbox todo={t} onChange={()=>{modifyTodo(t.id)}}/> : "" ;
+            return !t.isComplete ? (
+              <Checkbox
+                todo={t}
+                onChange={() => {
+                  modifyTodo(t.id);
+                }}
+              />
+            ) : (
+              ""
+            );
           })}
           {todoList.map((t) => {
-            return t.isComplete ? <Checkbox todo={t} onChange={()=>{modifyTodo(t.id)}}/> : "" ;
+            return t.isComplete ? (
+              <Checkbox
+                todo={t}
+                onChange={() => {
+                  modifyTodo(t.id);
+                }}
+              />
+            ) : (
+              ""
+            );
           })}
         </div>
 
@@ -48,36 +67,38 @@ function App() {
         />
 
         <button onClick={createTodo}>add todo</button>
+        <div className={"footer"}>
+          <BuiltWithBrev />
+        </div>
+
       </header>
+
     </div>
   );
 }
 
 export default App;
 
-
 interface CheckboxProps {
   todo: TodoType;
-  onChange: (id: string)=>void;
+  onChange: (id: string) => void;
 }
 
 const Checkbox = (props: CheckboxProps) => {
   const [isChecked, setIsChecked] = useState(props.todo.isComplete);
 
-
-
   return (
     <label>
-      <input 
-      type={"checkbox"}
-      onChange={()=>{
-        setIsChecked(!isChecked);
-        props.onChange(props.todo.id);
-      }}
+      <input
+        type={"checkbox"}
+        onChange={() => {
+          setIsChecked(!isChecked);
+          props.onChange(props.todo.id);
+        }}
         value={props.todo.title}
         checked={isChecked}
       />
       {props.todo.title}
     </label>
-  )
-}
+  );
+};
