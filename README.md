@@ -1,46 +1,48 @@
-# Getting Started with Create React App
+# Build a deployed todo app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Clone this repo and `npm install` to install dependencies, then `npm run start` to run the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Available Scripts
+## Backend Built With Brev
 
-In the project directory, you can run:
+Create a Brev account [here](https://app.brev.dev/alphasignup)
 
-### `npm start`
+Either use the console, or setup the CLI:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`brew install brevdev/tap/brev`,
+login with `brev login`,
+then clone the default project `brev clone --name default`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+In your default project, create a new endpoint and paste in the code below.
 
-### `npm test`
+```python
+import variables
+import shared
+from global_storage import storage_context
+from pydantic import BaseModel
+import uuid
+from fastapi.responses import JSONResponse
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+def get(db=storage_context("todosWorkshop")):
+  return {"todos": [v for i,v in db.items()]}
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+class ToDo(BaseModel):
+  title: str
+  isComplete: bool
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+def post(todo: ToDo, db=storage_context("todosWorkshop")):
+  id = str(uuid.uuid4())
+  db[id] = {**todo.dict(), "id": id}
+  return {id}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+def put(id, db=storage_context("todosWorkshop")):
+  if id in db:
+    obj = db[id]
+    obj['isComplete'] = not obj['isComplete']
+    db[id] = obj
+    return {"updated": obj}
+  else:
+    JSONResponse(status_code=404, content={"error": "ToDo ID not found"})
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
